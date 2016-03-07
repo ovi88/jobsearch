@@ -1,7 +1,19 @@
 <h1>Найденные вакансии по запросу: <span class="job_name"><em> <%= @job_name %></em></span> </h1>
 <%= link_to 'Back', root_path %>
   <% @result_array.each do |r| %>
-  <p>
+  <div>
     <%= r['name'] %>
-  </p>
+    <% zp = r['salary'] %>
+    <% if zp.class == Hash %>
+      Зарплата
+      <% if ! zp['from'].to_s.empty?%>
+        от
+        <%= zp['from'] %>
+      <% end %>
+      <% if ! zp['to'].to_s.empty? %>
+        до
+        <%= zp['to'] %>
+      <% end %>
+    <% end %>
+  </div>
   <%end%>
