@@ -3,7 +3,7 @@
   <% @result_array.each do |r| %>
   <div>
     <% vacancy = r['name'] %>
-    <% unless vacancy.scan(/(ruby)/i).empty? %>
+    <% unless vacancy.scan(/(#{@job_name})/i).empty? %>
       <%= vacancy %>
       <% zp = r['salary'] %>
       <% if zp.class == Hash %>
@@ -18,6 +18,6 @@
           <% end %>
           <% end %>
           <a href="<%= r['alternate_url'] %>"> Ссылка на hh.ru </a>
-    <% end %>      
+    <% end %>
   </div>
   <%end%>
