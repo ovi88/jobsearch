@@ -2,19 +2,22 @@
 <%= link_to 'Back', root_path %>
   <% @result_array.each do |r| %>
   <div>
-    <%= r['name'] %>
-    <% zp = r['salary'] %>
-    <% if zp.class == Hash %>
-      Зарплата
-      <% if ! zp['from'].to_s.empty?%>
-        от
-        <%= zp['from'] %>
-      <% end %>
-      <% if ! zp['to'].to_s.empty? %>
-        до
-        <%= zp['to'] %>
-      <% end %>
-    <% end %>
-    <a href="<%= r['alternate_url'] %>"> Ссылка на hh.ru </a> 
+    <% vacancy = r['name'] %>
+    <% unless vacancy.scan(/(ruby)/i).empty? %>
+      <%= vacancy %>
+      <% zp = r['salary'] %>
+      <% if zp.class == Hash %>
+        Зарплата
+        <% if ! zp['from'].to_s.empty?%>
+          от
+          <%= zp['from'] %>
+          <% end %>
+          <% if ! zp['to'].to_s.empty? %>
+          до
+          <%= zp['to'] %>
+          <% end %>
+          <% end %>
+          <a href="<%= r['alternate_url'] %>"> Ссылка на hh.ru </a>
+    <% end %>      
   </div>
   <%end%>
