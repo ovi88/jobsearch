@@ -29,9 +29,16 @@ class JobsController < ApplicationController
         hh_dop_url_result = open(hh_dop_url).read
         hh_dop_url_json = JSON.parse(hh_dop_url_result)
         hh_hash['experience'] = hh_dop_url_json['experience']['name']
-        unless hh_dop_url_json['address'].to_s.empty?
-          hh_hash['address'] = hh_dop_url_json['address']['metro_stations'][0]['station_name']
-        end  
+        unless hh_dop_url_json.dig('address', 'metro_stations') == nil
+          hh_hash['metro'] = hh_dop_url_json['address']['metro_stations'][0]['station_name']
+        end
+        #hh_hash['description'] = hh_dop_url_json['description']
+        unless hh_dop_url_json['key_skills'].empty?
+            hh_hash['key_skills'] = hh_dop_url_json['key_skills']
+        end
+        #unless hh_dop_url_json['key_skills'].to_s.empty?
+        #  hh_hash['key_skills'] = hh_dop_url_json['key_skills']
+        #end
         end
         @hh_result.push (hh_hash)
       end
