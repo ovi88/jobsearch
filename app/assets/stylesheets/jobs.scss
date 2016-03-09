@@ -4,14 +4,21 @@
 span.job_name {
   color: orange;
 }
-#vacancy {
+table {
     border: 1px solid black;
-    width: 350px;
-    height: 150px;
-    float: left;
-    margin-left: 70px;
-    margin-bottom: 30px;
+    padding: 0;
+    border-spacing: 0px;
+    border-collapse: collapse;
+    width: 80%;
+    margin: auto
 }
+
+td {
+    border: 1px solid black;
+    text-align: center;
+    vertical-align: middle;
+}
+
 h1.vacancy {
   text-align: center;
 }
