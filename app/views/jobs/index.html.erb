@@ -1,24 +1,23 @@
-<h1>Найденные вакансии по запросу: <span class="job_name"><em> <%= @job_name %></em></span> </h1>
-<%= link_to 'Back', root_path %>
+<h1 class="vacancy">Найденные вакансии по запросу: <span class="job_name"><em> <%= @job_name %></em></span> </h1>
+<span class="back"><%= link_to 'Back', root_path %></span><br>
   <% @hh_result.each do |r| %>
-  <div>
-    <%= r %>
-  <!--  <% vacancy = r['name'] %>
-    <% unless vacancy.scan(/(#{@job_name})/i).empty? %>
-      <%= vacancy %>
-      <% zp = r['salary'] %>
-      <% if zp.class == Hash %>
-        Зарплата
-        <% if ! zp['from'].to_s.empty?%>
-          от
-          <%= zp['from'] %>
-          <% end %>
-          <% if ! zp['to'].to_s.empty? %>
-          до
-          <%= zp['to'] %>
-          <% end %>
-          <% end %>
-          <a href="<%= r['alternate_url'] %>"> Ссылка на hh.ru </a>
-    <% end %> -->
+  <div id="vacancy">
+    Название: <%= r['name'] %><br>
+    <% unless r['salary_from'] == nil %>
+      Зарплата: oт <%= r['salary_from'] %>
+    <% end %>
+    <% unless r['salary_to'] == nil %>
+      до<%= r['salary_to'] %>
+    <%end%>
+    <% unless r['salary_currency'] == nil %>
+      <%= r['salary_currency'] %> <br>
+    <%end%>
+    <% unless r['experience'] == nil %>
+      Опыт: <%= r['experience'] %> <br>
+    <%end%>
+    <% unless r['metro'] == nil %>
+      Метро: <%= r['metro'] %> <br>
+    <%end%>
+    Ссылка: <a href="<%= r['url'] %>">ССылка на hh.ru</a> <br>
   </div>
   <%end%>
