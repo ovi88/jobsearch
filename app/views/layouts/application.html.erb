@@ -5,25 +5,6 @@
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
-   <script src="https://api-maps.yandex.ru/1.1/index.xml" type="text/javascript"></script>
-   <script type="text/javascript">
-   YMaps.jQuery(function () {
-     var traffic = new YMaps.Traffic.Control({ showInfoSwitcher: true }, { infoLayerShown: true });
-     var map = new YMaps.Map(YMaps.jQuery("#YMapsID")[0]);
-
-     traffic.show();
-     map.setCenter(new YMaps.GeoPoint(30.4, 59.93), 10);
-     var router = new YMaps.Router(['Красное Село', 'Обводный Канал'],[],{ viewAutoApply: true, avoidTrafficJams: traffic.isShown() });
-     map.addOverlay(router);
-     map.addControl(traffic);
-     YMaps.Events.observe(router, router.Events.Success, function () {
-       alert('Расстояние: ' + router.getDistance() + ' м' +
-        'Время в пути: ' + router.getDuration() + ' c');
-    });
-    });
-   </script>
-
-
 </head>
 <body>
 
