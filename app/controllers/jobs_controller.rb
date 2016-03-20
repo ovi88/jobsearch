@@ -3,11 +3,11 @@ class JobsController < ApplicationController
   require 'dotenv'
 
   def index
-
     @job_name = params[:job_name]
     @hh_result = []
-    home = "59.7458,30.0795"
     Dotenv.load
+    home = ENV["HOME_COORDINATE"]
+    puts home
     hh_api = open("https://api.hh.ru/vacancies?text=#{@job_name}&area=2&vacancy_search_fields=name&period=14").read
     hh_json = JSON.parse(hh_api)
     hh_array = hh_json['items']
