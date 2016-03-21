@@ -40,11 +40,7 @@ class JobsController < ApplicationController
         unless hh_dop_url_json.dig('address', 'metro_stations') == nil
           lat = hh_dop_url_json['address']['lat']
           lng = hh_dop_url_json['address']['lng']
-          departure_time = next_monday_timestamp
-          road_json = get_json("https://maps.googleapis.com/maps/api/distancematrix/json?departure_time=#{departure_time}&traffic_model=pessimistic&origins=#{ENV["HOME_COORDINATE"]}&destinations=#{lat},#{lng}&key=#{ENV["GOOGLE_MAP_KEY"]}")
-          unless road_json['rows'][START_ARRAY]['elements'][START_ARRAY]['duration_in_traffic'] == nil
-            hh_hash['duration'] = road_json['rows'][START_ARRAY]['elements'][START_ARRAY]['duration_in_traffic']['text']
-          end
+          hh_hash['duration'] = get_duration_from_google_map ("#{lat},#{lng}")
           unless hh_dop_url_json['address']['metro_stations'][START_ARRAY] == nil
             hh_hash['metro'] = hh_dop_url_json['address']['metro_stations'][START_ARRAY]['station_name']
           end
@@ -71,6 +67,14 @@ class JobsController < ApplicationController
     next_monday = Date.today.next_week.advance(:days=>MONDAY)
     next_monday = next_monday.to_time + MORNING_HOUR.hours
     departure_time = next_monday.to_i
+  end
+
+  def get_duration_from_google_map destination_coordinate
+    departure_time = next_monday_timestamp
+    road_json = get_json("https://maps.googleapis.com/maps/api/distancematrix/json?departure_time=#{departure_time}&traffic_model=pessimistic&origins=#{ENV["HOME_COORDINATE"]}&destinations=#{destination_coordinate}&key=#{ENV["GOOGLE_MAP_KEY"]}")
+    unless road_json['rows'][START_ARRAY]['elements'][START_ARRAY]['duration_in_traffic'] == nil
+      result = road_json['rows'][START_ARRAY]['elements'][START_ARRAY]['duration_in_traffic']['text']
+    end
   end
 
 end
