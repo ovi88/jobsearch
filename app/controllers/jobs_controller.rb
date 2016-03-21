@@ -1,16 +1,27 @@
 class JobsController < ApplicationController
+
   require 'open-uri'
   require 'dotenv'
 
+  Dotenv.load
+
+  SEARCH_PERIOD = 7
+  SEARCH_REGION = 2
+  MONDAY = 0
+  MORNING_HOUR = 9
+  START_ARRAY = 0
+
   def index
     @job_name = params[:job_name]
-    @hh_result = []
-    Dotenv.load
-    home = ENV["HOME_COORDINATE"]
-    puts home
-    hh_api = open("https://api.hh.ru/vacancies?text=#{@job_name}&area=2&vacancy_search_fields=name&period=14").read
-    hh_json = JSON.parse(hh_api)
+    @hh_result = get_data_from_hh
+  end
+
+  private
+
+  def get_data_from_hh
+    hh_json = get_json("https://api.hh.ru/vacancies?text=#{@job_name}&area=#{SEARCH_REGION}&vacancy_search_fields=name&period=#{SEARCH_PERIOD}")
     hh_array = hh_json['items']
+    hh_result = []
     hh_array.each do |h|
       hh_hash = {}
       vacancy = h['name']
@@ -18,48 +29,48 @@ class JobsController < ApplicationController
         hh_hash['name'] = vacancy
         salary = h['salary']
         unless salary.to_s.empty?
-          unless salary['from'].to_s.empty?
-            hh_hash['salary_from'] =  salary['from']
-          end
-          unless salary['to'].to_s.empty?
-            hh_hash['salary_to'] = salary['to']
-          end
-          unless salary['currency'].to_s.empty?
-            hh_hash['salary_currency'] = salary['currency']
-          end
+          hh_hash['salary_from'] = check_empty? salary['from']
+          hh_hash['salary_to'] = check_empty? salary['to']
+          hh_hash['salary_currency'] = check_empty? salary['currency']
         end
         hh_hash['url'] = h['alternate_url']
         hh_dop_url = h['url']
-        hh_dop_url_result = open(hh_dop_url).read
-        hh_dop_url_json = JSON.parse(hh_dop_url_result)
+        hh_dop_url_json = get_json(hh_dop_url)
         hh_hash['experience'] = hh_dop_url_json['experience']['name']
         unless hh_dop_url_json.dig('address', 'metro_stations') == nil
           lat = hh_dop_url_json['address']['lat']
           lng = hh_dop_url_json['address']['lng']
-          next_monday = Date.today.next_week.advance(:days=>0)
-          next_monday = next_monday.to_time + 9.hours
-          departure_time = next_monday.to_i
-          road_dur = open("https://maps.googleapis.com/maps/api/distancematrix/json?departure_time=#{departure_time}&traffic_model=pessimistic&origins=#{home}&destinations=#{lat},#{lng}&key=#{ENV["GOOGLE_MAP_KEY"]}").read
-          road_json = JSON.parse(road_dur)
-          hh_hash['duration'] = road_json['rows'][0]['elements'][0]['duration_in_traffic']['text']
-          #puts vacancy
-          #puts road_json
-          unless hh_dop_url_json['address']['metro_stations'][0] == nil
-            hh_hash['metro'] = hh_dop_url_json['address']['metro_stations'][0]['station_name']
+          departure_time = next_monday_timestamp
+          road_json = get_json("https://maps.googleapis.com/maps/api/distancematrix/json?departure_time=#{departure_time}&traffic_model=pessimistic&origins=#{ENV["HOME_COORDINATE"]}&destinations=#{lat},#{lng}&key=#{ENV["GOOGLE_MAP_KEY"]}")
+          unless road_json['rows'][START_ARRAY]['elements'][START_ARRAY]['duration_in_traffic'] == nil
+            hh_hash['duration'] = road_json['rows'][START_ARRAY]['elements'][START_ARRAY]['duration_in_traffic']['text']
+          end
+          unless hh_dop_url_json['address']['metro_stations'][START_ARRAY] == nil
+            hh_hash['metro'] = hh_dop_url_json['address']['metro_stations'][START_ARRAY]['station_name']
           end
         end
-        #hh_hash['description'] = hh_dop_url_json['description']
-        unless hh_dop_url_json['key_skills'].empty?
-            hh_hash['key_skills'] = hh_dop_url_json['key_skills']
-        end
-        #unless hh_dop_url_json['key_skills'].to_s.empty?
-        #  hh_hash['key_skills'] = hh_dop_url_json['key_skills']
-        #end
-        @hh_result.push (hh_hash)
+        hh_hash['key_skills'] = check_empty? hh_dop_url_json['key_skills']
+        hh_result.push(hh_hash)
       end
-    #puts @hh_result
     end
-    #puts result_array[0]
+    return hh_result
+  end
+
+  def check_empty? value
+    unless value.to_s.empty?
+      value
+    end
+  end
+
+  def get_json url
+    get_uri = open(url).read
+    get_json = JSON.parse(get_uri)
+  end
+
+  def next_monday_timestamp
+    next_monday = Date.today.next_week.advance(:days=>MONDAY)
+    next_monday = next_monday.to_time + MORNING_HOUR.hours
+    departure_time = next_monday.to_i
   end
 
 end
