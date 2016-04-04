@@ -24,6 +24,7 @@ class HhGet
       vacancy = h['name']
       unless vacancy.scan(/(#{@job_name})/i).empty?
         hh_hash['name'] = vacancy
+        hh_hash['company'] = h['employer']['name']
         salary = h['salary']
         unless salary.to_s.empty?
           hh_hash['salary_from'] = check_empty? salary['from']

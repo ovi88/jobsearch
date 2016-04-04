@@ -2,7 +2,8 @@
 <span class="back"><%= link_to 'Back', root_path %></span><br>
 <table>
   <tr>
-    <td rowspan="2">Название</td>
+    <td rowspan="2">Должность</td>
+    <td rowspan="2">Компания</td>
     <td colspan="3">Зарплата</td>
     <td rowspan="2">Опыт</td>
     <td rowspan="2">Метро</td>
@@ -14,16 +15,17 @@
     <td>до</td>
     <td>валюта</td>
   </tr>
-  <% @hh_result.each do |r| %>
+  <% @result.each do |r| %>
       <tr>
         <td><%= r['name']%></td>
+        <td><%= r['company']%></td>
         <td><%= r['salary_from']%></td>
         <td><%= r['salary_to']%></td>
         <td><%= r['salary_currency']%></td>
         <td><%= r['experience']%></td>
         <td><%= r['metro']%></td>
         <td><%= r['duration']%></td>
-        <td><a href="<%= r['url']%>">Ссылка на hh.ru</a></td>
+        <td><a href="<%= r['url']%>">Ссылка</a></td>
       </tr>
   <%end%>
   </table>
