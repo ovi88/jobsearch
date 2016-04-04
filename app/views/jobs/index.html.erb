@@ -5,8 +5,9 @@
     <td rowspan="2">Должность</td>
     <td rowspan="2">Компания</td>
     <td colspan="3">Зарплата</td>
+    <td rowspan="2">График</td>
     <td rowspan="2">Опыт</td>
-    <td rowspan="2">Метро</td>
+    <td rowspan="2">Местоположение</td>
     <td rowspan="2">Время в пути</td>
     <td rowspan="2">Источник</td>
   </tr>
@@ -22,8 +23,9 @@
         <td><%= r['salary_from']%></td>
         <td><%= r['salary_to']%></td>
         <td><%= r['salary_currency']%></td>
+        <td><%= r['mode']%></td>
         <td><%= r['experience']%></td>
-        <td><%= r['metro']%></td>
+        <td><%= r['address']%></td>
         <td><%= r['duration']%></td>
         <td><a href="<%= r['url']%>">Ссылка</a></td>
       </tr>

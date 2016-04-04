@@ -40,7 +40,7 @@ class HhGet
           lng = hh_dop_url_json['address']['lng']
           hh_hash['duration'] = get_duration_from_google_map ("#{lat},#{lng}")
           unless hh_dop_url_json['address']['metro_stations'][START_ARRAY] == nil
-            hh_hash['metro'] = hh_dop_url_json['address']['metro_stations'][START_ARRAY]['station_name']
+            hh_hash['address'] = hh_dop_url_json['address']['metro_stations'][START_ARRAY]['station_name']
           end
         end
         hh_hash['key_skills'] = check_empty? hh_dop_url_json['key_skills']
