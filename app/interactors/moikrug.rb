@@ -28,7 +28,9 @@ class Moikrug
         if job.at_css('div.info div.meta span.location a') != nil
           moi_hash['address'] = job.at_css('div.info div.meta span.location a').inner_text
         end
-        moi_hash['mode'] = job.at_css('div.info div.meta span.occupation').inner_text
+        if  job.at_css('div.info div.meta span.occupation') != nil
+          moi_hash['mode'] = job.at_css('div.info div.meta span.occupation').inner_text
+        end    
         moi_hash['url'] =  URL + job.at_css('a.job_icon')['href']
 
       moi_result.push(moi_hash)
